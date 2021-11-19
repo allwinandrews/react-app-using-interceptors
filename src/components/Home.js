@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import UserService from "../services/user.service";
-
+import AuthContext from "../store/auth-context";
+import Table from "./Layout/Table";
 import styles from "./Home.module.css";
 
 const Home = () => {
+  const authCtx = useContext(AuthContext);
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     UserService.getUsers().then(
       (response) => {
-        console.log(response.data.data);
         setUsers(response.data.data);
         setLoading(false);
       },
@@ -21,6 +23,7 @@ const Home = () => {
           error.message ||
           error.toString();
 
+        console.log(error);
         setUsers(_content);
         setLoading(false);
       }
@@ -29,44 +32,16 @@ const Home = () => {
 
   const usersExists = users.length > 0;
 
-  const tableHeaders = (
-    <thead>
-      {usersExists ? (
-        <tr>
-          {["Company", "Contact", "Country"].map((header) => (
-            <th key={header}>{header}</th>
-          ))}
-        </tr>
-      ) : (
-        <th>No Users Found</th>
-      )}
-    </thead>
-  );
-
-  const userRows = (
-    <tbody>
-      {users.map((user) => {
-        const { id, email, first_name, last_name } = user;
-        return (
-          <tr key={id}>
-            <td>{first_name}</td>
-            <td>{last_name}</td>
-            <td>{email}</td>
-          </tr>
-        );
-      })}
-    </tbody>
-  );
-
   return (
     <div className="container">
       <header className="jumbotron">
         {loading && <h1>Loading...</h1>}
-        {loading === false && (
-          <table className={styles.table}>
-            {tableHeaders}
-            {usersExists && userRows}
-          </table>
+        {loading === false && usersExists && (
+          <Table
+            rows={users}
+            emptytag={"No Users Found"}
+            className={styles.table}
+          />
         )}
       </header>
     </div>
