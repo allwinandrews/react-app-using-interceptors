@@ -31,7 +31,6 @@ const validEmail = (value) => {
 
 const Login = (props) => {
   const form = useRef();
-  const checkBtn = useRef();
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 

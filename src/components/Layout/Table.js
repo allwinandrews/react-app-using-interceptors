@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Table({ rows, emptytag, className }) {
+  const navigate = useNavigate();
+
   const tableHeaders = (
     <thead>
       {rows.length ? (
@@ -15,10 +18,14 @@ export default function Table({ rows, emptytag, className }) {
     </thead>
   );
 
+  const handleRowClick = (id) => {
+    navigate(`/user/${id}`);
+  };
+
   const tableBody = (
     <tbody>
       {rows.map((row) => (
-        <tr key={row.id}>
+        <tr key={row.id} onClick={() => handleRowClick(row.id)}>
           {Object.entries(row).map((item) => (
             <td key={item[0] + item[1]}>{item[1]}</td>
           ))}
