@@ -15,7 +15,7 @@ function App() {
   const authCtx = useContext(AuthContext);
 
   const logOut = () => {
-    AuthService.logout();
+    authCtx.logout();
   };
 
   return (
@@ -41,9 +41,9 @@ function App() {
                 </Link>
               </li>
               <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={logOut}>
+                <Link to={"/login"} className="nav-link" onClick={logOut}>
                   LogOut
-                </a>
+                </Link>
               </li>
             </div>
           ) : (
