@@ -35,13 +35,8 @@ const logout = () => {
   TokenService.removeUser();
 };
 
-const getCurrentUser = (id) => {
-  return api.get("users/" + id).then((response) => {
-    console.log(response.data.data);
-
-    return response.data.data;
-  });
-};
+const getCurrentUser = (id) =>
+  api.get("users/" + id).then((response) => response.data.data);
 
 const AuthService = {
   register,
