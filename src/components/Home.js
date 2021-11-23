@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import UserService from "../services/user.service";
-import AuthContext from "../store/auth-context";
 import Table from "./Layout/Table";
 import styles from "./Home.module.css";
 
 const Home = () => {
-  const authCtx = useContext(AuthContext);
-
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 

@@ -3,13 +3,13 @@ import { Routes, Route, Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
-import AuthService from "./services/auth.service";
 import AuthContext from "./store/auth-context";
 
-import Home from "./components/Home.js";
+import Home from "./components/Home";
 const Login = React.lazy(() => import("./components/Login"));
 const Profile = React.lazy(() => import("./components/Profile"));
 const Register = React.lazy(() => import("./components/Register"));
+const UserDetails = React.lazy(() => import("./components/UserDetails"));
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -76,6 +76,7 @@ function App() {
               }
             />
             <Route exact path="/register" element={<Register />} />
+            <Route exact path="/user/:userId" element={<UserDetails />} />
           </Routes>
         </div>
       </Suspense>
