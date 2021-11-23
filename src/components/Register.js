@@ -1,12 +1,13 @@
 import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
 import AuthService from "../services/auth.service";
 import AuthContext from "../store/auth-context";
+import FormButton from "./Layout/FormButton";
+import FormInput from "./Layout/FormInput";
 
 const required = (value) => {
   if (!value) {
@@ -23,16 +24,6 @@ const validEmail = (value) => {
     return (
       <div className="alert alert-danger" role="alert">
         This is not a valid email.
-      </div>
-    );
-  }
-};
-
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 20) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
       </div>
     );
   }
@@ -58,6 +49,7 @@ const Register = (props) => {
   const [password, setPassword] = useState("");
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onChangeEmail = (e) => {
     const email = e.target.value;
@@ -73,6 +65,7 @@ const Register = (props) => {
     e.preventDefault();
 
     setMessage("");
+    setLoading(true);
     setSuccessful(false);
 
     form.current.validateAll();
@@ -82,6 +75,7 @@ const Register = (props) => {
         (response) => {
           authCtx.register(response);
           setMessage("User Registered Successfully");
+          setLoading(false);
           setSuccessful(true);
           setTimeout(() => {
             navigate("/profile");
@@ -95,6 +89,7 @@ const Register = (props) => {
             error.message ||
             error.toString();
 
+          setLoading(false);
           setMessage(resMessage);
           setSuccessful(false);
         }
@@ -114,33 +109,26 @@ const Register = (props) => {
         <Form onSubmit={handleRegister} ref={form}>
           {!successful && (
             <div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="email"
-                  value={email}
-                  onChange={onChangeEmail}
-                  validations={[required, validEmail]}
-                />
-              </div>
+              <FormInput
+                name="email"
+                type="text"
+                value={email}
+                handleChange={onChangeEmail}
+                validations={[required, validEmail]}
+                className="form-control"
+                title="Email"
+              />
+              <FormInput
+                name="password"
+                type="password"
+                value={password}
+                handleChange={onChangePassword}
+                validations={[required, vpassword]}
+                className="form-control"
+                title="Password"
+              />
 
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <Input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  value={password}
-                  onChange={onChangePassword}
-                  validations={[required, vpassword]}
-                />
-              </div>
-
-              <div className="form-group">
-                <button className="btn btn-primary btn-block">Sign Up</button>
-              </div>
+              <FormButton loading={loading} title={"Sign Up"} />
             </div>
           )}
 

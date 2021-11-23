@@ -9,9 +9,9 @@ const AuthContext = createContext({
 });
 
 const retrieveStoredToken = () => {
-  const storedToken = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  return { token: storedToken };
+  return user ? { token: user.token } : null;
 };
 
 export const AuthContextProvider = (props) => {

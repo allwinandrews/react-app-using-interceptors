@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, Suspense } from "react";
+import React, { useContext, Suspense } from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -14,15 +14,8 @@ const Register = React.lazy(() => import("./components/Register"));
 function App() {
   const authCtx = useContext(AuthContext);
 
-  const [showModeratorBoard, setShowModeratorBoard] = useState(false);
-  const [showAdminBoard, setShowAdminBoard] = useState(false);
-  const [currentUser, setCurrentUser] = useState(undefined);
-
   const logOut = () => {
     AuthService.logout();
-    setShowModeratorBoard(false);
-    setShowAdminBoard(false);
-    setCurrentUser(undefined);
   };
 
   return (
@@ -38,37 +31,13 @@ function App() {
                 Home
               </Link>
             </li>
-
-            {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={"/mod"} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )}
-
-            {showAdminBoard && (
-              <li className="nav-item">
-                <Link to={"/admin"} className="nav-link">
-                  Admin Board
-                </Link>
-              </li>
-            )}
-
-            {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
-            )}
           </div>
 
-          {currentUser ? (
+          {authCtx.isLoggedIn ? (
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link to={"/profile"} className="nav-link">
-                  {currentUser.username}
+                  Profile
                 </Link>
               </li>
               <li className="nav-item">
@@ -99,7 +68,13 @@ function App() {
             <Route exact path="/home" element={<Home />} />
             <Route exact path="/" element={<Navigate to="/home" />} />
             <Route exact path="/login" element={<Login />} />
-            <Route exact path="/profile" element={<Profile />} />
+            <Route
+              exact
+              path="/profile"
+              element={
+                authCtx.isLoggedIn ? <Profile /> : <Navigate to="/home" />
+              }
+            />
             <Route exact path="/register" element={<Register />} />
           </Routes>
         </div>
