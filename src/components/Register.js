@@ -1,13 +1,13 @@
 import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Form from "react-validation/build/form";
-import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
 import AuthService from "../services/auth.service";
 import AuthContext from "../store/auth-context";
 import FormButton from "./Layout/FormButton";
 import FormInput from "./Layout/FormInput";
+import MessageComponent from "./Layout/MessageComponent";
 
 const required = (value) => {
   if (!value) {
@@ -70,31 +70,29 @@ const Register = (props) => {
 
     form.current.validateAll();
 
-    if (checkBtn.current.context._errors.length === 0) {
-      AuthService.register(email, password).then(
-        (response) => {
-          authCtx.register(response);
-          setMessage("User Registered Successfully");
-          setLoading(false);
-          setSuccessful(true);
-          setTimeout(() => {
-            navigate("/profile");
-          }, 2000);
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+    AuthService.register(email, password).then(
+      (response) => {
+        authCtx.register(response);
+        setMessage("User Registered Successfully");
+        setLoading(false);
+        setSuccessful(true);
+        setTimeout(() => {
+          navigate("/profile");
+        }, 2000);
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-          setLoading(false);
-          setMessage(resMessage);
-          setSuccessful(false);
-        }
-      );
-    }
+        setLoading(false);
+        setMessage(resMessage);
+        setSuccessful(false);
+      }
+    );
   };
 
   return (
@@ -105,7 +103,6 @@ const Register = (props) => {
           alt="profile-img"
           className="profile-img-card"
         />
-
         <Form onSubmit={handleRegister} ref={form}>
           {!successful && (
             <div>
@@ -127,24 +124,12 @@ const Register = (props) => {
                 className="form-control"
                 title="Password"
               />
-
               <FormButton loading={loading} title={"Sign Up"} />
             </div>
           )}
-
           {message && (
-            <div className="form-group">
-              <div
-                className={
-                  successful ? "alert alert-success" : "alert alert-danger"
-                }
-                role="alert"
-              >
-                {message}
-              </div>
-            </div>
+            <MessageComponent success={successful} message={message} />
           )}
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </div>
     </div>

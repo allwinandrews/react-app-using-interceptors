@@ -31,17 +31,12 @@ const login = (email, password) => {
     });
 };
 
-const logout = () => {
-  TokenService.removeUser();
-};
-
 const getCurrentUser = (id) =>
   api.get("users/" + id).then((response) => response.data.data);
 
 const AuthService = {
   register,
   login,
-  logout,
   getCurrentUser,
 };
 

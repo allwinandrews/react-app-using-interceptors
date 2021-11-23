@@ -1,13 +1,13 @@
 import React, { useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Form from "react-validation/build/form";
-import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
 import AuthService from "../services/auth.service";
 import AuthContext from "../store/auth-context";
 import FormButton from "./Layout/FormButton";
 import FormInput from "./Layout/FormInput";
+import MessageComponent from "./Layout/MessageComponent";
 
 const required = (value) => {
   if (!value) {
@@ -58,28 +58,24 @@ const Login = (props) => {
 
     form.current.validateAll();
 
-    if (checkBtn.current.context._errors.length === 0) {
-      AuthService.login(email, password).then(
-        (response) => {
-          authCtx.login(response);
-          navigate("/profile");
-        },
-        (error) => {
-          console.log(error);
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+    AuthService.login(email, password).then(
+      (response) => {
+        authCtx.login(response);
+        navigate("/profile");
+      },
+      (error) => {
+        console.log(error);
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-          setLoading(false);
-          setMessage(resMessage);
-        }
-      );
-    } else {
-      setLoading(false);
-    }
+        setLoading(false);
+        setMessage(resMessage);
+      }
+    );
   };
 
   return (
@@ -90,7 +86,6 @@ const Login = (props) => {
           alt="profile-img"
           className="profile-img-card"
         />
-
         <Form onSubmit={handleLogin} ref={form}>
           <FormInput
             name="email"
@@ -101,7 +96,6 @@ const Login = (props) => {
             className="form-control"
             title="Email"
           />
-
           <FormInput
             name="password"
             type="password"
@@ -111,17 +105,8 @@ const Login = (props) => {
             className="form-control"
             title="Password"
           />
-
           <FormButton loading={loading} title={"Login"} />
-
-          {message && (
-            <div className="form-group">
-              <div className="alert alert-danger" role="alert">
-                {message}
-              </div>
-            </div>
-          )}
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
+          {message && <MessageComponent success={false} message={message} />}
         </Form>
       </div>
     </div>
