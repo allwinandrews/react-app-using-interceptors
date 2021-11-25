@@ -65,14 +65,23 @@ function App() {
 
         <div className="container mt-3">
           <Routes>
-            <Route exact path="/home" element={<Home />} />
-            <Route exact path="/" element={<Navigate to="/home" />} />
+            <Route exact path="/" element={<Navigate to="/home/page=1" />} />
+            <Route
+              exact
+              path="/home"
+              element={<Navigate to="/home/page=1" />}
+            />
+            <Route exact path="/home/page=:pageNumber" element={<Home />} />
             <Route exact path="/login" element={<Login />} />
             <Route
               exact
               path="/profile"
               element={
-                authCtx.isLoggedIn ? <Profile /> : <Navigate to="/home" />
+                authCtx.isLoggedIn ? (
+                  <Profile />
+                ) : (
+                  <Navigate to="/home/page=1" />
+                )
               }
             />
             <Route exact path="/register" element={<Register />} />
