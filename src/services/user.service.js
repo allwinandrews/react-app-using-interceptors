@@ -1,7 +1,7 @@
 import api from "./api";
 
-const getUsers = () => {
-  return api.get("users");
+const getUsers = (page) => {
+  return api.get(`users?page=${page}`);
 };
 
 const UserService = {
